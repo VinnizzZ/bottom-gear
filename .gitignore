@@ -1,0 +1,32 @@
+# Dependências (Nunca suba a pasta node_modules!)
+node_modules/
+jspm_packages/
+
+# Build e Saída (Arquivos gerados automaticamente)
+dist/
+build/
+out/
+.parcel-cache/
+.eslintcache/
+
+# Logs de erro
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Configurações de Editor (VS Code, IntelliJ, etc)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Arquivos de Sistema
+.DS_Store
+Thumbs.db
+
+# Créditos e Env (Caso use chaves de API no futuro)
+.env
+.env.local

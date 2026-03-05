@@ -256,110 +256,212 @@ function drawSpookyTree(ctx, x, y, roadScale) {
 }
 
 function drawOpponentCar(ctx, x, y, roadScale, color) {
-    if (roadScale < 0.005) return; // Don't draw if too far
-
-    let scale = roadScale * 8; // Correctly tuned scale for perspective 
-
-
+    if (roadScale < 0.005) return;
+    let scale = roadScale * 8;
 
     // Car Shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.fillRect(x - 40 * scale, y - 5 * scale, 80 * scale, 10 * scale);
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(x - 45 * scale, y - 4 * scale, 90 * scale, 8 * scale);
 
-    // Chassis Frame (Dark metal)
-    ctx.fillStyle = color;
+    // 1. Lower Chassis / Bumpers
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x - 35 * scale, y - 12 * scale, 70 * scale, 10 * scale);
+
+    // 2. Main Body (The "Rat Rod" shape)
+    // Hood/Engine area
+    ctx.fillStyle = '#222';
     ctx.beginPath();
-    ctx.moveTo(x - 30 * scale, y - 5 * scale);
-    ctx.lineTo(x + 30 * scale, y - 5 * scale);
-    ctx.lineTo(x + 20 * scale, y - 20 * scale);
-    ctx.lineTo(x - 20 * scale, y - 20 * scale);
+    ctx.moveTo(x - 28 * scale, y - 10 * scale);
+    ctx.lineTo(x + 28 * scale, y - 10 * scale);
+    ctx.lineTo(x + 25 * scale, y - 22 * scale);
+    ctx.lineTo(x - 25 * scale, y - 22 * scale);
     ctx.fill();
 
-    // Wheels
-    ctx.fillStyle = '#000';
-    ctx.fillRect(x - 40 * scale, y - 10 * scale, 10 * scale, 10 * scale);
-    ctx.fillRect(x + 30 * scale, y - 10 * scale, 10 * scale, 10 * scale);
-
-    // Window
-    ctx.fillStyle = '#0a0a0a';
+    // Cabin
+    ctx.fillStyle = '#151515';
     ctx.beginPath();
-    ctx.moveTo(x - 15 * scale, y - 20 * scale);
-    ctx.lineTo(x + 15 * scale, y - 20 * scale);
-    ctx.lineTo(x + 5 * scale, y - 28 * scale);
-    ctx.lineTo(x - 5 * scale, y - 28 * scale);
+    ctx.moveTo(x - 20 * scale, y - 22 * scale);
+    ctx.lineTo(x + 20 * scale, y - 22 * scale);
+    ctx.lineTo(x + 15 * scale, y - 35 * scale);
+    ctx.lineTo(x - 15 * scale, y - 35 * scale);
     ctx.fill();
 
-    // Thrusters
+    // 3. Windows (Grimy/Dark)
+    ctx.fillStyle = '#050505';
+    ctx.beginPath();
+    ctx.moveTo(x - 12 * scale, y - 24 * scale);
+    ctx.lineTo(x + 12 * scale, y - 24 * scale);
+    ctx.lineTo(x + 10 * scale, y - 32 * scale);
+    ctx.lineTo(x - 10 * scale, y - 32 * scale);
+    ctx.fill();
+
+    // 4. Detailed Armor Plates (Rusted & Bolted)
+    ctx.fillStyle = color; // Team color
+    ctx.globalAlpha = 0.6;
+    // Front guard
+    ctx.fillRect(x - 32 * scale, y - 15 * scale, 10 * scale, 8 * scale);
+    // Side panel
+    ctx.fillRect(x + 15 * scale, y - 20 * scale, 18 * scale, 12 * scale);
+    ctx.globalAlpha = 1.0;
+
+    // Bolts on armor
+    ctx.fillStyle = '#444';
+    ctx.fillRect(x + 28 * scale, y - 18 * scale, 2 * scale, 2 * scale);
+    ctx.fillRect(x + 18 * scale, y - 12 * scale, 2 * scale, 2 * scale);
+
+    // 5. Headlights (Dull/Broken yellow)
+    ctx.fillStyle = '#554400';
+    ctx.fillRect(x - 24 * scale, y - 18 * scale, 4 * scale, 3 * scale);
+    ctx.fillRect(x + 20 * scale, y - 18 * scale, 4 * scale, 3 * scale);
+
+    //  headlamp glow (faint)
+    ctx.fillStyle = 'rgba(255, 200, 0, 0.2)';
+    ctx.beginPath();
+    ctx.arc(x - 22 * scale, y - 16.5 * scale, 5 * scale, 0, Math.PI * 2);
+    ctx.arc(x + 22 * scale, y - 16.5 * scale, 5 * scale, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 6. Wheels (Chunky & Rusted)
+    ctx.fillStyle = '#000'; // Tire
+    ctx.fillRect(x - 42 * scale, y - 14 * scale, 12 * scale, 14 * scale);
+    ctx.fillRect(x + 30 * scale, y - 14 * scale, 12 * scale, 14 * scale);
+
+    ctx.fillStyle = '#332211'; // Rusted Rim
+    ctx.fillRect(x - 39 * scale, y - 11 * scale, 6 * scale, 8 * scale);
+    ctx.fillRect(x + 33 * scale, y - 11 * scale, 6 * scale, 8 * scale);
+
+    // 7. Spikes & Exhaust
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 1 * scale;
+    // Spikes forward
+    ctx.beginPath();
+    ctx.moveTo(x - 30 * scale, y - 10 * scale);
+    ctx.lineTo(x - 35 * scale, y + 2 * scale);
+    ctx.moveTo(x + 30 * scale, y - 10 * scale);
+    ctx.lineTo(x + 35 * scale, y + 2 * scale);
+    ctx.stroke();
+
+    // Exhaust smoke/heat (small)
     ctx.fillStyle = '#ffaa00';
-    ctx.fillRect(x - 20 * scale, y - 10 * scale, 10 * scale, 5 * scale);
-    ctx.fillRect(x + 10 * scale, y - 10 * scale, 10 * scale, 5 * scale);
+    ctx.fillRect(x + 10 * scale, y - 25 * scale, 4 * scale, 4 * scale);
 }
 
 function drawCar(ctx, x, y, speed, timeMs, nitroActive) {
-    const scale = 1.8;
-
-    // Bobbing effect from engine/movements
+    const scale = 2.0; // Slightly larger for detail
     let bob = (speed > 10) ? Math.sin(timeMs / 50) * 2 : 0;
     y += bob;
 
     // Car Shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.fillRect(x - 45 * scale, y - 5 * scale, 90 * scale, 15 * scale);
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.fillRect(x - 50 * scale, y - 5 * scale, 100 * scale, 12 * scale);
 
-    // Chassis Frame (Dark metal)
-    ctx.fillStyle = '#151515';
+    // 1. Lower Body / Chassis (The base muscle car)
+    ctx.fillStyle = '#0a0a0a';
     ctx.beginPath();
-    ctx.moveTo(x - 35 * scale, y - 5 * scale);
-    ctx.lineTo(x + 35 * scale, y - 5 * scale);
-    ctx.lineTo(x + 25 * scale, y - 25 * scale);
-    ctx.lineTo(x - 25 * scale, y - 25 * scale);
+    // Rear bumper to front
+    ctx.moveTo(x - 45 * scale, y - 8 * scale);
+    ctx.lineTo(x + 45 * scale, y - 8 * scale);
+    ctx.lineTo(x + 42 * scale, y - 22 * scale);
+    ctx.lineTo(x - 42 * scale, y - 22 * scale);
     ctx.fill();
 
-    // Back Thruster Vents
-    ctx.fillStyle = '#050505';
-    ctx.fillRect(x - 30 * scale, y - 10 * scale, 60 * scale, 5 * scale);
-
-    // Glowing Blood-red/Orange accents
-    ctx.fillStyle = nitroActive ? '#00ffff' : '#ff1100'; // Cyan when nitro is on, red normally!
-    ctx.fillRect(x - 25 * scale, y - 8 * scale, 50 * scale, 2 * scale);
-
-    // Cockpit Window (Pitch Black)
-    ctx.fillStyle = '#000000';
+    // 2. Upper Cabin / Roof
+    ctx.fillStyle = '#111';
     ctx.beginPath();
-    ctx.moveTo(x - 20 * scale, y - 25 * scale);
-    ctx.lineTo(x + 20 * scale, y - 25 * scale);
-    ctx.lineTo(x + 10 * scale, y - 35 * scale);
-    ctx.lineTo(x - 10 * scale, y - 35 * scale);
+    ctx.moveTo(x - 30 * scale, y - 22 * scale);
+    ctx.lineTo(x + 30 * scale, y - 22 * scale);
+    ctx.lineTo(x + 22 * scale, y - 42 * scale);
+    ctx.lineTo(x - 22 * scale, y - 42 * scale);
     ctx.fill();
 
-    // Window reflection
-    ctx.fillStyle = '#222';
+    // 3. Windows with Reflection
+    ctx.fillStyle = '#000'; // Window base
     ctx.beginPath();
-    ctx.moveTo(x - 18 * scale, y - 26 * scale);
-    ctx.lineTo(x + 18 * scale, y - 26 * scale);
-    ctx.lineTo(x - 5 * scale, y - 34 * scale);
+    ctx.moveTo(x - 22 * scale, y - 24 * scale);
+    ctx.lineTo(x + 22 * scale, y - 24 * scale);
+    ctx.lineTo(x + 18 * scale, y - 38 * scale);
+    ctx.lineTo(x - 18 * scale, y - 38 * scale);
     ctx.fill();
 
-    // Side Wheels
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(x - 45 * scale, y - 15 * scale, 15 * scale, 18 * scale);
-    ctx.fillRect(x + 30 * scale, y - 15 * scale, 15 * scale, 18 * scale);
+    // Glass reflection
+    ctx.fillStyle = 'rgba(100, 100, 120, 0.2)';
+    ctx.beginPath();
+    ctx.moveTo(x - 15 * scale, y - 25 * scale);
+    ctx.lineTo(x + 5 * scale, y - 25 * scale);
+    ctx.lineTo(x - 10 * scale, y - 36 * scale);
+    ctx.fill();
 
-    // Engine Fire Effect
+    // 4. Detailed Blower (Engine intake)
+    ctx.fillStyle = '#333';
+    ctx.fillRect(x - 12 * scale, y - 28 * scale, 24 * scale, 14 * scale); // Blower body
+    ctx.fillStyle = '#000'; // Top intake
+    ctx.fillRect(x - 9 * scale, y - 30 * scale, 18 * scale, 4 * scale);
+    // Rotating belt detail (if moving)
+    if (speed > 0) {
+        ctx.fillStyle = '#222';
+        let beltPos = (timeMs / 40) % 8;
+        ctx.fillRect(x - 11 * scale, y - 26 * scale + beltPos, 22 * scale, 2 * scale);
+    }
+
+    // 5. External Roll Cage & Spikes
+    ctx.strokeStyle = '#2a2a2a';
+    ctx.lineWidth = 1.5 * scale;
+    ctx.beginPath();
+    // Left pillar
+    ctx.moveTo(x - 32 * scale, y - 22 * scale);
+    ctx.lineTo(x - 25 * scale, y - 44 * scale);
+    // Right pillar
+    ctx.moveTo(x + 32 * scale, y - 22 * scale);
+    ctx.lineTo(x + 25 * scale, y - 44 * scale);
+    // Roof bar
+    ctx.moveTo(x - 25 * scale, y - 44 * scale);
+    ctx.lineTo(x + 25 * scale, y - 44 * scale);
+    ctx.stroke();
+
+    // 6. Rusted Armor & Spikes
+    ctx.fillStyle = '#3a2515'; // Rust
+    ctx.fillRect(x - 44 * scale, y - 18 * scale, 15 * scale, 10 * scale); // panel
+    ctx.fillRect(x + 28 * scale, y - 20 * scale, 12 * scale, 12 * scale); // panel
+
+    // Tail lights (Dull red)
+    ctx.fillStyle = '#400';
+    ctx.fillRect(x - 38 * scale, y - 14 * scale, 6 * scale, 3 * scale);
+    ctx.fillRect(x + 32 * scale, y - 14 * scale, 6 * scale, 3 * scale);
+
+    // 7. Wheels (Modern but messy)
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x - 52 * scale, y - 16 * scale, 16 * scale, 20 * scale);
+    ctx.fillRect(x + 36 * scale, y - 16 * scale, 16 * scale, 20 * scale);
+
+    // 8. Nitro & Engine Fire (Detailed)
+    if (nitroActive) {
+        // Cyan glow
+        ctx.fillStyle = '#00ffff';
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = '#00ffff';
+        ctx.fillRect(x - 38 * scale, y - 8 * scale, 18 * scale, 6 * scale);
+        ctx.fillRect(x + 20 * scale, y - 8 * scale, 18 * scale, 6 * scale);
+        ctx.shadowBlur = 0;
+    } else {
+        // Hot metal exhaust
+        ctx.fillStyle = '#662200';
+        ctx.fillRect(x - 38 * scale, y - 8 * scale, 15 * scale, 3 * scale);
+        ctx.fillRect(x + 23 * scale, y - 8 * scale, 15 * scale, 3 * scale);
+    }
+
     if (speed > 10) {
-        let fireColor = nitroActive ? '#00ffff' : '#ffaa00';
-        let fireSize = nitroActive ? Math.random() * 8 + 8 : Math.random() * 5 + 4;
-
+        let fireSize = (speed / 12) + Math.random() * 6;
+        let fireColor = nitroActive ? '#ffffff' : '#ff4400';
         ctx.fillStyle = fireColor;
         ctx.beginPath();
-        ctx.arc(x - 20 * scale, y + 2 * scale, fireSize, 0, Math.PI * 2);
-        ctx.arc(x + 20 * scale, y + 2 * scale, fireSize, 0, Math.PI * 2);
+        ctx.arc(x - 30 * scale, y + 2 * scale, fireSize, 0, Math.PI * 2);
+        ctx.arc(x + 30 * scale, y + 2 * scale, fireSize, 0, Math.PI * 2);
         ctx.fill();
-
-        ctx.fillStyle = nitroActive ? '#ffffff' : '#ff0000'; // Core heat
+        // Inner core
+        ctx.fillStyle = nitroActive ? '#00ffff' : '#ffaa00';
         ctx.beginPath();
-        ctx.arc(x - 20 * scale, y + 2 * scale, fireSize * 0.5, 0, Math.PI * 2);
-        ctx.arc(x + 20 * scale, y + 2 * scale, fireSize * 0.5, 0, Math.PI * 2);
+        ctx.arc(x - 30 * scale, y + 2 * scale, fireSize * 0.5, 0, Math.PI * 2);
+        ctx.arc(x + 30 * scale, y + 2 * scale, fireSize * 0.5, 0, Math.PI * 2);
         ctx.fill();
     }
 }

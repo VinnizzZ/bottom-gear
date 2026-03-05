@@ -57,7 +57,27 @@ function buildTrack() {
             if (i < 20) curve = (i / 20) * section.curve;
             else if (i > section.length - 20) curve = ((section.length - i) / 20) * section.curve;
 
-            track.push({ curve: curve });
+            let trees = [];
+            // Randomly add trees (but not at the start/finish line area for clarity)
+            // We'll calculate the total expected length based on sections
+            const trackLengthTotalSegments = sections.reduce((acc, s) => acc + s.length, 0);
+            let absoluteIndex = track.length;
+            if (absoluteIndex > 10 && absoluteIndex < trackLengthTotalSegments - 10) {
+                if (Math.random() < 0.05) { // 5% chance per segment
+                    trees.push({
+                        x: 1.5 + Math.random() * 2, // Right side
+                        type: 'tree'
+                    });
+                }
+                if (Math.random() < 0.05) {
+                    trees.push({
+                        x: -1.5 - Math.random() * 2, // Left side
+                        type: 'tree'
+                    });
+                }
+            }
+
+            track.push({ curve: curve, trees: trees });
         }
     }
     trackLength = track.length * SEGMENT_LENGTH;

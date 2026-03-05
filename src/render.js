@@ -204,6 +204,54 @@ export function renderGame(ctx, width, height, track, cameraZ, playerX, speed, t
 
     // Draw Player Car Spacecraft / Doom Vehicle
     drawCar(ctx, width / 2, height - 30, speed, timeMs, nitroActive);
+
+    // Draw Trees (from back to front)
+    for (let n = DRAW_DISTANCE - 1; n >= 0; n--) {
+        let segmentIndex = ((baseSegment + n) % track.length + track.length) % track.length;
+        let segment = track[segmentIndex];
+        if (segment.trees && segment.screen) {
+            for (let treeData of segment.trees) {
+                let scaleFactor = segment.screen.w / ROAD_WIDTH;
+                let treeX = segment.screen.x + (treeData.x * segment.screen.w);
+                drawSpookyTree(ctx, treeX, segment.screen.y, scaleFactor);
+            }
+        }
+    }
+}
+
+function drawSpookyTree(ctx, x, y, roadScale) {
+    if (roadScale < 0.002) return;
+    let scale = roadScale * 15;
+
+    ctx.strokeStyle = '#0a0500'; // Very dark brown/black
+    ctx.lineWidth = 2 * scale;
+    ctx.lineCap = 'round';
+
+    // Trunk
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y - 40 * scale);
+    ctx.stroke();
+
+    // Random-ish dry branches
+    function drawBranch(bx, by, len, angle, depth) {
+        if (depth === 0) return;
+        let ex = bx + Math.cos(angle) * len;
+        let ey = by + Math.sin(angle) * len;
+
+        ctx.beginPath();
+        ctx.moveTo(bx, by);
+        ctx.lineTo(ex, ey);
+        ctx.lineWidth = depth * 0.8 * scale;
+        ctx.stroke();
+
+        drawBranch(ex, ey, len * 0.7, angle - 0.4, depth - 1);
+        drawBranch(ex, ey, len * 0.7, angle + 0.4, depth - 1);
+    }
+
+    drawBranch(x, y - 20 * scale, 15 * scale, -Math.PI / 2 - 0.5, 3);
+    drawBranch(x, y - 30 * scale, 12 * scale, -Math.PI / 2 + 0.6, 3);
+    drawBranch(x, y - 40 * scale, 10 * scale, -Math.PI / 2, 2);
 }
 
 function drawOpponentCar(ctx, x, y, roadScale, color) {
@@ -476,5 +524,21 @@ export function renderMirror(ctx, width, height, track, cameraZ, playerX, racers
         let racerScreenX = vr.screen.x - (vr.racer.x * vr.screen.w);
 
         drawOpponentCar(ctx, racerScreenX, vr.screen.y, scaleFactor, vr.racer.color);
+    }
+
+    // Draw Trees in Mirror (back to front relative to mirror camera)
+    for (let n = mirrorDrawDist - 1; n >= 0; n--) {
+        let segmentIndex = (baseSegment - n);
+        while (segmentIndex < 0) segmentIndex += trackLen;
+        segmentIndex = segmentIndex % trackLen;
+        let segment = track[segmentIndex];
+        if (segment.trees && segment.mirrorScreen) {
+            for (let treeData of segment.trees) {
+                let scaleFactor = segment.mirrorScreen.w / ROAD_WIDTH;
+                // Invert X for mirror
+                let treeX = segment.mirrorScreen.x - (treeData.x * segment.mirrorScreen.w);
+                drawSpookyTree(ctx, treeX, segment.mirrorScreen.y, scaleFactor);
+            }
+        }
     }
 }

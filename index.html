@@ -11,18 +11,65 @@
 
 <body>
     <div id="game-container">
-        <canvas id="gameCanvas" width="640" height="480"></canvas>
-        <canvas id="mirrorCanvas" width="200" height="60"></canvas>
-        <div id="hud">
-            <div id="pos-display">POS: <span id="pos-value">1/4</span></div>
-            <div id="time-display">
-                TIME: <span id="total-time">00:00:00</span><br>
-                LAP: <span id="lap-time">00:00:00</span><br>
-                LAPS: <span id="lap-count">1/3</span>
+        <!-- Main Menu -->
+        <div id="main-menu" class="menu-overlay">
+            <h1>BOTTOM GEAR WC</h1>
+            <div class="menu-options">
+                <button id="btn-start" class="menu-btn">INICIAR</button>
+                <button id="btn-difficulty" class="menu-btn">DIFICULDADE</button>
+                <button id="btn-map" class="menu-btn">MAPA</button>
+                <button id="btn-tutorial" class="menu-btn">TUTORIAL</button>
             </div>
-            <div id="speed-display">
-                <span id="speed-value">0</span> KM/H<br>
-                NITRO: <span id="nitro-count">⚡⚡⚡</span>
+        </div>
+
+        <!-- Sub Menus -->
+        <div id="difficulty-menu" class="menu-overlay hidden">
+            <h2>DIFICULDADE</h2>
+            <div class="menu-options">
+                <button class="menu-btn lock">FÁCIL (BLOQUEADO)</button>
+                <button class="menu-btn lock">NORMAL (AUTO)</button>
+                <button class="menu-btn lock">PESADELO (BLOQUEADO)</button>
+                <button class="btn-back menu-btn">VOLTAR</button>
+            </div>
+        </div>
+
+        <div id="map-menu" class="menu-overlay hidden">
+            <h2>MAPA</h2>
+            <div class="menu-options">
+                <button class="menu-btn lock">ESTRADA DO SANGUE (AUTO)</button>
+                <button class="menu-btn lock">DESERTO DE CINZAS</button>
+                <button class="menu-btn lock">VALE DOS OSSOS</button>
+                <button class="btn-back menu-btn">VOLTAR</button>
+            </div>
+        </div>
+
+        <div id="tutorial-menu" class="menu-overlay hidden">
+            <h2>CONTROLES</h2>
+            <div class="tutorial-content">
+                <p>ACELERAR: [SETAS / WASD]</p>
+                <p>CURVAR: [SETAS / WASD]</p>
+                <p>FREIO: [ESPAÇO]</p>
+                <p>NITRO: [SHIFT]</p>
+                <p>PAUSE: [ESC]</p>
+            </div>
+            <button class="btn-back menu-btn">VOLTAR</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="hidden">
+            <canvas id="gameCanvas" width="640" height="480"></canvas>
+            <canvas id="mirrorCanvas" width="200" height="60"></canvas>
+            <div id="hud">
+                <div id="pos-display">POS: <span id="pos-value">1/4</span></div>
+                <div id="time-display">
+                    TIME: <span id="total-time">00:00:00</span><br>
+                    LAP: <span id="lap-time">00:00:00</span><br>
+                    LAPS: <span id="lap-count">1/3</span>
+                </div>
+                <div id="speed-display">
+                    <span id="speed-value">0</span> KM/H<br>
+                    NITRO: <span id="nitro-count">⚡⚡⚡</span>
+                </div>
             </div>
         </div>
         <div id="crt-overlay"></div>

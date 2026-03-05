@@ -16,10 +16,11 @@ let breaking = 4;
 let offRoadDecel = 6;
 let centrifugalForce = 0.025;
 
-let cameraZ = -5000;
 let playerX = 0; // -1 to 1 is on road. < -1 or > 1 is grass.
 let track = [];
 let trackLength = 0;
+
+let gameState = 'MENU'; // 'MENU' or 'RACING'
 
 let nitros = 3;
 let nitroActive = false;
@@ -99,8 +100,29 @@ function initRacers() {
 buildTrack();
 initRacers();
 
+// Menu Logic
+function showMenu(menuId) {
+    document.querySelectorAll('.menu-overlay').forEach(m => m.classList.add('hidden'));
+    document.getElementById(menuId).classList.remove('hidden');
+}
+
+document.getElementById('btn-start').addEventListener('click', () => {
+    gameState = 'RACING';
+    document.getElementById('main-menu').classList.add('hidden');
+    document.getElementById('game-screen').classList.remove('hidden');
+});
+
+document.getElementById('btn-difficulty').addEventListener('click', () => showMenu('difficulty-menu'));
+document.getElementById('btn-map').addEventListener('click', () => showMenu('map-menu'));
+document.getElementById('btn-tutorial').addEventListener('click', () => showMenu('tutorial-menu'));
+
+document.querySelectorAll('.btn-back').forEach(btn => {
+    btn.addEventListener('click', () => showMenu('main-menu'));
+});
+
 // Nitro event listener
 onNitro(() => {
+    if (gameState !== 'RACING') return;
     if (nitros > 0 && !nitroActive) {
         nitros--;
         nitroActive = true;
@@ -116,7 +138,14 @@ function update(dt) {
     let deltaTime = dt - lastTime;
     lastTime = dt;
 
-    // Initialize timing properly after first frame
+    if (gameState === 'MENU') {
+        // Just render the background for the menu (using initial values)
+        renderGame(ctx, canvas.width, canvas.height, track, cameraZ, playerX, 0, dt, false, racers);
+        requestAnimationFrame(update);
+        return;
+    }
+
+    // Initialize timing properly after first frame of racing
     if (startTime === 0) {
         startTime = dt;
         lapStartTime = dt;

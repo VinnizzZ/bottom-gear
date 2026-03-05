@@ -221,19 +221,19 @@ export function renderGame(ctx, width, height, track, cameraZ, playerX, speed, t
 
 function drawSpookyTree(ctx, x, y, roadScale) {
     if (roadScale < 0.002) return;
-    let scale = roadScale * 15;
+    let scale = roadScale * 25; // Base height scale remains the same
 
-    ctx.strokeStyle = '#0a0500'; // Very dark brown/black
-    ctx.lineWidth = 2 * scale;
+    ctx.strokeStyle = '#2a2015'; // Slightly lighter "ghostly brown" to stand out from black mountains
+    ctx.lineWidth = 3 * scale; // Slightly thicker trunk
     ctx.lineCap = 'round';
 
     // Trunk
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.lineTo(x, y - 40 * scale);
+    ctx.lineTo(x, y - 50 * scale);
     ctx.stroke();
 
-    // Random-ish dry branches
+    // Recursive dry branches
     function drawBranch(bx, by, len, angle, depth) {
         if (depth === 0) return;
         let ex = bx + Math.cos(angle) * len;
@@ -242,16 +242,17 @@ function drawSpookyTree(ctx, x, y, roadScale) {
         ctx.beginPath();
         ctx.moveTo(bx, by);
         ctx.lineTo(ex, ey);
-        ctx.lineWidth = depth * 0.8 * scale;
+        ctx.lineWidth = depth * 1.2 * scale; // Thicker branches
         ctx.stroke();
 
-        drawBranch(ex, ey, len * 0.7, angle - 0.4, depth - 1);
-        drawBranch(ex, ey, len * 0.7, angle + 0.4, depth - 1);
+        let spread = 0.7; // Wider branch spread
+        drawBranch(ex, ey, len * 0.7, angle - spread, depth - 1);
+        drawBranch(ex, ey, len * 0.7, angle + spread, depth - 1);
     }
 
-    drawBranch(x, y - 20 * scale, 15 * scale, -Math.PI / 2 - 0.5, 3);
-    drawBranch(x, y - 30 * scale, 12 * scale, -Math.PI / 2 + 0.6, 3);
-    drawBranch(x, y - 40 * scale, 10 * scale, -Math.PI / 2, 2);
+    drawBranch(x, y - 25 * scale, 18 * scale, -Math.PI / 2 - 0.6, 3);
+    drawBranch(x, y - 35 * scale, 15 * scale, -Math.PI / 2 + 0.7, 3);
+    drawBranch(x, y - 50 * scale, 12 * scale, -Math.PI / 2, 2);
 }
 
 function drawOpponentCar(ctx, x, y, roadScale, color) {

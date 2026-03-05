@@ -65,13 +65,13 @@ function buildTrack() {
             if (absoluteIndex > 10 && absoluteIndex < trackLengthTotalSegments - 10) {
                 if (Math.random() < 0.05) { // 5% chance per segment
                     trees.push({
-                        x: 1.5 + Math.random() * 2, // Right side
+                        x: 2.0 + Math.random() * 2, // Right side
                         type: 'tree'
                     });
                 }
                 if (Math.random() < 0.05) {
                     trees.push({
-                        x: -1.5 - Math.random() * 2, // Left side
+                        x: -2.0 - Math.random() * 2, // Left side
                         type: 'tree'
                     });
                 }

@@ -45,9 +45,10 @@ O **Project Nitro** é um simulador de corrida focado na estética 16-bit. O obj
 Como o jogo é baseado em tecnologias web nativas, você não precisa de um servidor complexo para a versão de desenvolvimento:
 
     Clone o repositório:
-    Bash
+    ```bash
 
     git clone [https://github.com/seu-usuario/top-racer-clone.git](https://github.com/seu-usuario/top-racer-clone.git)
+    ```
 
     Abra o projeto:
 

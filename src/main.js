@@ -17,6 +17,7 @@ let offRoadDecel = 6;
 let centrifugalForce = 0.025;
 
 let playerX = 0; // -1 to 1 is on road. < -1 or > 1 is grass.
+let cameraZ = -5000;
 let track = [];
 let trackLength = 0;
 

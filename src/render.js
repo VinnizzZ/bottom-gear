@@ -7,8 +7,8 @@ const DRAW_DISTANCE = 300;
 const COLORS = {
     sky: '#1a0000', // Crimson/black sky
     mountains: '#0a0000', // Silhouette
-    grass1: '#210000', // Dark blood red
-    grass2: '#1a0000', // Darker black-red
+    grass1: '#1a2421ff', // Dark blood red
+    grass2: '#161d1bff', // Darker black-red
     road1: '#111111', // Very dark asphalt
     road2: '#0a0a0a',
     rumble1: '#770000', // Alert red
@@ -26,9 +26,15 @@ function drawQuad(ctx, color, x1, y1, w1, x2, y2, w2) {
 }
 
 export function renderGame(ctx, width, height, track, cameraZ, playerX, speed, timeMs, nitroActive, racers) {
+    if (!track || track.length === 0) return;
+    if (width <= 0 || height <= 0) return;
     // Fill Sky
     ctx.fillStyle = COLORS.sky;
-    ctx.fillRect(0, 0, width, height);
+    ctx.fillRect(0, 0, width, height / 2);
+
+    // Fill Ground (Base terrain to prevent sky showing through gaps)
+    ctx.fillStyle = COLORS.grass2;
+    ctx.fillRect(0, height / 2, width, height / 2);
 
     // Simulate basic mountain parallax by looking at curve at horizon
     let baseSegment = Math.floor(cameraZ / SEGMENT_LENGTH);
@@ -46,9 +52,9 @@ export function renderGame(ctx, width, height, track, cameraZ, playerX, speed, t
         if (xPos < -width) xPos += width * 2;
         if (xPos > width * 2) xPos -= width * 2;
 
-        ctx.lineTo(xPos, height / 2 - 50 - ((i % 2) * 40));
+        ctx.lineTo(xPos, height / 2 - 80 - ((i % 2) * 60)); // Taller mountains (80+60 vs 50+40)
     }
-    ctx.lineTo(width, height / 2);
+    ctx.lineTo(width, height / 2 + 2); // Slight overlap to avoid horizon gap
     ctx.fill();
 
     let maxy = height;
@@ -68,7 +74,7 @@ export function renderGame(ctx, width, height, track, cameraZ, playerX, speed, t
         };
 
         // Pseudo 3D perspective projection
-        let scale = 0.8 / (p3D.z / CAMERA_HEIGHT);
+        let scale = 0.8 / (Math.max(1, p3D.z) / CAMERA_HEIGHT);
 
         segment.screen = {
             x: (width / 2) + p3D.x * scale,
@@ -472,18 +478,25 @@ export function renderMirror(ctx, width, height, track, cameraZ, playerX, racers
 
     // Fill Sky
     ctx.fillStyle = COLORS.sky;
-    ctx.fillRect(0, 0, width, height);
+    ctx.fillRect(0, 0, width, height / 2);
 
-    // Mountains? Too much detail, keeping simple for mirror or inverted parallax
+    // Fill Ground
+    ctx.fillStyle = COLORS.grass2;
+    ctx.fillRect(0, height / 2, width, height / 2);
+
+    // Mountains (Silhouette with peaks for consistency)
     ctx.fillStyle = COLORS.mountains;
     ctx.beginPath();
-    ctx.moveTo(0, height / 2);
-    ctx.lineTo(width, height / 2);
-    ctx.lineTo(width, height);
-    ctx.lineTo(0, height);
+    ctx.moveTo(0, height / 2 + 2);
+    for (let i = 0; i <= 3; i++) {
+        let xPos = i * (width / 2);
+        ctx.lineTo(xPos, height / 2 - 25 - ((i % 2) * 20));
+    }
+    ctx.lineTo(width, height / 2 + 2);
     ctx.fill();
 
     let baseSegment = Math.floor(cameraZ / SEGMENT_LENGTH);
+    baseSegment = ((baseSegment % track.length) + track.length) % track.length;
     // When looking backward, we're essentially at the end of the segment looking reversed
     let percent = 1 - (((cameraZ % SEGMENT_LENGTH) + SEGMENT_LENGTH) % SEGMENT_LENGTH / SEGMENT_LENGTH);
     let maxy = height;
